@@ -1,0 +1,15 @@
+; $Id: sopac.info,v 1.1 2009/03/17 01:18:36 jblyberg Exp $
+name = SOPAC
+description = The Social OPAC™ for Drupal.
+package = SOPAC
+version = 6.x-2.0-beta2
+core = 6.x
+
+dependencies[] = profile
+
+; Information added by drupal.org packaging script on 2009-09-25
+version = "6.x-2.0"
+core = "6.x"
+project = "sopac"
+datestamp = "1253841058"
+
