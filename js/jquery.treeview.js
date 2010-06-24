@@ -10,7 +10,7 @@
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  *
- * Revision: $Id: jquery.treeview.js,v 1.1 2009/03/17 01:18:36 jblyberg Exp $
+ * Revision: $Id: jquery.treeview.js,v 1.2 2010/03/08 21:18:22 jblyberg Exp $
  *
  */
 
