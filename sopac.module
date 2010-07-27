@@ -100,37 +100,45 @@ function sopac_block($op='list', $delta=0) {
       $block[0] = array(
          'info' => t('Catalog Facets'),
         'pages' => $sopac_prefix . '/search/*',
+        'cache' => BLOCK_CACHE_PER_PAGE,
       );
       $block[1] = array(
          'info' => t('Search Tracker'),
         'pages' => $sopac_prefix . '/search/*',
+        'cache' => BLOCK_CACHE_PER_PAGE,
       );
       $block[2] = array(
          'info' => t('Catalog Tags'),
         'pages' => $sopac_prefix . '/*',
+        'cache' => BLOCK_CACHE_PER_PAGE,
       );
       $block[3] = array(
          'info' => t('Catalog Reviews'),
         'pages' => $sopac_prefix . '/*',
         'weight' => 1,
+        'cache' => BLOCK_CACHE_PER_PAGE,
       );
       $block[4] = array(
          'info' => t('Item Tags'),
         'pages' => $sopac_prefix . '/record/*',
+        'cache' => BLOCK_CACHE_PER_PAGE,
       );
       $block[5] = array(
          'info' => t('Item Reviews'),
         'pages' => $sopac_prefix . '/record/*',
         'weight' => 1,
+        'cache' => BLOCK_CACHE_PER_PAGE,
       );
       $block[6] = array(
          'info' => t('Personal Tags'),
         'pages' => 'user/*',
+        'cache' => BLOCK_CACHE_PER_PAGE,
       );
       $block[7] = array(
          'info' => t('Personal Reviews'),
         'pages' => 'user/*',
         'weight' => 1,
+        'cache' => BLOCK_CACHE_PER_PAGE,
       );
       return $block;
     case 'view':
