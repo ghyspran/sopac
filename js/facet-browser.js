@@ -1,7 +1,7 @@
 $(document).ready(function(){
-	$("#facet").treeview({
+	$("#sopac-facet-block-facet").treeview({
 		animated: "fast",
-		control:"#sidetreecontrol",
+		control:"#sopac-facet-block-sidetreecontrol",
 		persist: "location"
 	});
 });

@@ -389,11 +389,11 @@ padding-left:10px;
 
 /* Facet Tree View */
 
-#facet {
+#sopac-facet-block-facet {
   margin-left: -10px;
 }
 
-#sidetreecontrol {
+#sopac-facet-block-sidetreecontrol {
   font-size: 10px;
   text-align: center;
 }

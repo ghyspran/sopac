@@ -5,11 +5,11 @@ $uri = $uri_arr[0];
 $getvars = sopac_parse_get_vars();
 
 ?>
-<div id="container">
-  <div id="content">
-  <div id="sidetreecontrol"><a href="?#">Collapse All</a> | <a href="?#">Expand All</a></div>
+<div id="sopac-facet-block-container">
+  <div id="sopac-facet-block-content">
+  <div id="sopac-facet-block-sidetreecontrol"><a href="?#">Collapse All</a> | <a href="?#">Expand All</a></div>
   <br />
-    <ul id="facet" class="treeview">
+    <ul id="sopac-facet-block-facet" class="treeview">
 <?php
 
 $mat_count = count($locum_result['facets']['mat']);
