@@ -21,8 +21,8 @@ if ($locum_result['cover_img'] && $locum_result['cover_img'] != 'CACHE') {
 
 <table>
   <tr>
-  <td class="hitlist-number" width="5%"><?php print $result_num; ?></td>
-  <td width="13%">
+  <td class="hitlist-number" width="20px"><?php print $result_num; ?></td>
+  <td width="115px">
     <a href="/<?php print $url_prefix . '/record/' . $locum_result['bnum'] ?>">
     <?php
     if (module_exists('covercache')) {
@@ -32,7 +32,7 @@ if ($locum_result['cover_img'] && $locum_result['cover_img'] != 'CACHE') {
     <?php } ?>
     </a>
     </td>
-  <td width="<?php print $locum_result['review_links'] ? '50' : '100'; ?>%" valign="top">
+  <td width="330px" valign="top">
     <ul class="hitlist-info">
       <li class="hitlist-title">
         <strong><a href="/<?php print $url_prefix . '/record/' . $locum_result['bnum'] ?>"><?php print ucwords($locum_result['title']);?></a></strong>
@@ -63,17 +63,6 @@ if ($locum_result['cover_img'] && $locum_result['cover_img'] != 'CACHE') {
       ?>
     </ul>
   </td>
-  <?php
-  if ($locum_result['review_links']) {
-    print '<td width="50%" valign="top">';
-    print '<ul class="hitlist-info">';
-    print '<li class="hitlist-subtitle">Reviews &amp; Summaries</li>';
-    foreach ($locum_result['review_links'] as $rev_title => $rev_link) {
-      print '<li><a href="' . $rev_link . '" target="_new">' . $rev_title . '</a>';
-    }
-    print '</ul></td>';
-  }
-  ?>
   <td width="10%">
   <ul class="hitlist-format-icon">
     <li><img src="<?php print '/' . drupal_get_path('module', 'sopac') . '/images/' . $locum_result['mat_code'] . '.png' ?>"></li>
