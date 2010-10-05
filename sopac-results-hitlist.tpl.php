@@ -21,7 +21,7 @@ if ($locum_result['cover_img'] && $locum_result['cover_img'] != 'CACHE') {
 
 <table>
   <tr>
-  <td class="hitlist-number" width="7%"><?php print $result_num; ?></td>
+  <td class="hitlist-number" width="5%"><?php print $result_num; ?></td>
   <td width="13%">
     <a href="/<?php print $url_prefix . '/record/' . $locum_result['bnum'] ?>">
     <?php
@@ -74,7 +74,7 @@ if ($locum_result['cover_img'] && $locum_result['cover_img'] != 'CACHE') {
     print '</ul></td>';
   }
   ?>
-  <td width="15%">
+  <td width="10%">
   <ul class="hitlist-format-icon">
     <li><img src="<?php print '/' . drupal_get_path('module', 'sopac') . '/images/' . $locum_result['mat_code'] . '.png' ?>"></li>
     <li style="margin-top: -2px;"><?php print wordwrap($locum_config['formats'][$locum_result['mat_code']], 8, '<br />'); ?></li>
