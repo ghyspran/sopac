@@ -115,18 +115,9 @@
   width: 100%;
 }
  
-.itemrecord h1, .itemrecord h2 {
-  color:#777765;
-  font-size:2.4em;
-  font-weight:normal;
-  line-height:1em;
-  margin:0 0 0.2em;
-}
+.itemrecord h1 { font-size: 2.5em; line-height: 1; margin-bottom: 0.5em; letter-spacing: 0.025em; color: #EE2E24;}
 
-.itemrecord h2 {
-  font-size:1.8em;
-  margin-bottom:0.5em;
-}
+.itemrecord h2 { font-size: 1em; margin-bottom: 0.75em; }
 
 .item-right, .item-left {
   float: left;
@@ -136,13 +127,16 @@
   width: 28%;
   margin-right: 15px;
 }
+
 .item-left ul {
   list-style-type: none;
   margin-left: -20px;
 }
+
 .item-left .item-cover {
   margin-top: 0px;
 }
+
 .item-right {
   width: 66%;
   margin-left: 10px;
@@ -185,7 +179,7 @@ padding: 5px;
   margin-left:0;
   padding-left:10px;
 }
-
+ 
 .item-info-block {
   padding-top:0;
 }
@@ -196,15 +190,17 @@ padding: 5px;
   margin-top:0;
 }
 
-.item-format-icon {
-  float: right;
+ul.item-format-icon { list-style: none; display: inline; }
+
+.item-format-icon li {
+  display: block;
+  float: left;
   list-style: none;
   font-size: 8pt;
-  text-align: center;
-  color: #8D8A81;
-  margin-top: -35px;
-  width: 45px;
+  color: #EE2E24;
 }
+
+.item-format-icon li.format-text { width:100px; margin-top: 12px;}
 
 .item-request p a {
   background-color:#EEEEEE;
@@ -212,6 +208,8 @@ padding: 5px;
   font-size:1.4em;
   padding:4px;
 }
+
+.return-to-search { display: block; width: 200px; background: #efefef; color: #EE2E24; padding: 3px 0 0 20px; }
 
 .item-detail-block th {
   border-bottom-width:0;
