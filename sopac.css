@@ -111,7 +111,7 @@
  */
  
 .itemrecord {
-  padding: 0px 0px 0px 10px;
+  padding: 0px 0px 0px 0px;
   width: 100%;
 }
  
@@ -124,8 +124,8 @@
 }
 
 .item-left {
-  width: 28%;
-  margin-right: 15px;
+  width: 220px;
+  margin-right: 0px;
 }
 
 .item-left ul {
@@ -138,7 +138,7 @@
 }
 
 .item-right {
-  width: 66%;
+  width: 410px;
   margin-left: 10px;
 }
 .item-right h2 {
@@ -209,7 +209,21 @@ ul.item-format-icon { list-style: none; display: inline; }
   padding:4px;
 }
 
-.return-to-search { display: block; width: 200px; background: #efefef; color: #EE2E24; padding: 3px 0 0 20px; }
+.return-to-search { display: block; width: 180px; height: 30px;  background: #efefef url('/sites/all/themes/doune/assets/images/return-to-search.png') top left no-repeat; color: #EE2E24; text-indent: -3000px; outline: none; }
+
+.return-to-search:hover { background-position: 0 -30px; }
+
+#askus {
+  display: block;
+  width: 180px;
+  height: 50px ;
+  background: #FFF url('../images/askus.png') top left no-repeat;
+}
+
+#askus:hover {
+   background-position: 0 -50px;
+}
+
 
 .item-detail-block th {
   border-bottom-width:0;
