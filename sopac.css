@@ -115,7 +115,7 @@
   width: 100%;
 }
  
-.itemrecord h1 { font-size: 2.5em; line-height: 1; margin-bottom: 0.5em; letter-spacing: 0.025em; color: #EE2E24;}
+.itemrecord h1 { font-size: 2.125em; line-height: 1; margin-bottom: 0.5em; letter-spacing: 0; color: #000;}
 
 .itemrecord h2 { font-size: 1em; margin-bottom: 0.75em; }
 
@@ -135,17 +135,12 @@
 
 .item-left .item-cover {
   margin-top: 0px;
+  margin-top: -60px;
 }
 
 .item-right {
   width: 410px;
   margin-left: 10px;
-}
-.item-right h2 {
-background-color:#777765;
-color:#FFFFFF;
-margin: 0px;
-padding: 5px;
 }
 
 .item-cover-block {
@@ -190,6 +185,15 @@ padding: 5px;
   margin-top:0;
 }
 
+.item-format {
+  position: relative;
+  z-index: 1000;
+  top: 250px;
+  left: 6px;
+  background: transparent;
+  overflow: hidden;
+}
+
 ul.item-format-icon { list-style: none; display: inline; }
 
 .item-format-icon li {
@@ -198,9 +202,10 @@ ul.item-format-icon { list-style: none; display: inline; }
   list-style: none;
   font-size: 8pt;
   color: #EE2E24;
+  background: #FFF;
 }
 
-.item-format-icon li.format-text { width:100px; margin-top: 12px;}
+.item-format-icon li.format-text { width:100px; padding: 12px 0; }
 
 .item-request p a {
   background-color:#EEEEEE;
@@ -212,18 +217,6 @@ ul.item-format-icon { list-style: none; display: inline; }
 .return-to-search { display: block; width: 180px; height: 30px;  background: #efefef url('/sites/all/themes/doune/assets/images/return-to-search.png') top left no-repeat; color: #EE2E24; text-indent: -3000px; outline: none; }
 
 .return-to-search:hover { background-position: 0 -30px; }
-
-#askus {
-  display: block;
-  width: 180px;
-  height: 50px ;
-  background: #FFF url('../images/askus.png') top left no-repeat;
-}
-
-#askus:hover {
-   background-position: 0 -50px;
-}
-
 
 .item-detail-block th {
   border-bottom-width:0;
@@ -258,7 +251,6 @@ ul.item-format-icon { list-style: none; display: inline; }
 }
 
 .item-avail-disp, #item-reviews, #item-notes, #item-syndetics {
-  border:1px solid #CCCCCC;
   margin-bottom:20px;
 }
 
@@ -275,12 +267,43 @@ ul.item-format-icon { list-style: none; display: inline; }
 }
 
 #item-syndetics ul {
-list-style-image:none;
-list-style-position:outside;
-list-style-type:none;
-margin-left:10px;
-margin-top:10px;
-padding-left:0;
+  list-style-image:none;
+  list-style-position:outside;
+  list-style-type:none;
+  margin-left:10px;
+  margin-top:10px;
+  padding-left:0;
+}
+
+.item-right h2 {
+  background: #FFF;
+  font-size: 1.2em;
+  line-height: 1.4em;
+  color: #333;
+}
+
+ul.publishing-details {
+  color: #909090;
+  padding: 0;
+  list-style: none;
+}
+
+ul.publishing-details li {
+  list-style: none;
+  font-size: 0.875em;
+}
+
+.record-heading {
+  background: #FFF url('/sites/all/themes/doune/assets/images/standard-block-stroke.gif') center left repeat-x;
+}
+
+.item-right h3 {
+  color:#3D3D3D;
+  background: #FFF;
+  font-size:1.2em;
+  font-weight: bold;
+  letter-spacing:1px;
+  text-transform: uppercase;	
 }
 
 #item-reviews p, #item-notes p, #item-avail p {
@@ -292,7 +315,7 @@ width:100%;
 }
 
 #item-reviews h3, .review-byline {
-padding-left:10px;
+ 
 }
 
 /* Request Template Styles */
@@ -538,12 +561,6 @@ div.star {
 
 input.tagsubmit {
   font-size:9px;
-  font-family:Arial,sans-serif;
-  vertical-align: text-top;
-  height:16px;
-  border-style:dotted;
-  border-color:#E45A19;
-  margin-left: -5px;
 }
 
 .tags-table td {
