@@ -128,6 +128,11 @@
   margin-right: 0px;
 }
 
+.item-left h3 {
+  font-size: 1em;
+  font-weight: bold; 
+}
+
 .item-left ul {
   list-style-type: none;
   margin-left: -20px;
@@ -207,6 +212,11 @@ ul.item-format-icon { list-style: none; display: inline; }
 
 .item-format-icon li.format-text { width:100px; padding: 12px 0; }
 
+.item-request {
+  clear: left;
+  margin: 10px 0 0 0;
+}
+
 .item-request p a {
   background-color:#EEEEEE;
   border:1px solid #CCCCCC;
@@ -236,7 +246,7 @@ ul.item-format-icon { list-style: none; display: inline; }
 }
 
 .item-request {
-  color:#E45A19;
+  color: #EE2E24;
 }
 
 .item-avail-label th {
@@ -281,6 +291,13 @@ ul.item-format-icon { list-style: none; display: inline; }
   line-height: 1.4em;
   color: #333;
 }
+
+.item-right ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 
 ul.publishing-details {
   color: #909090;
