@@ -172,6 +172,7 @@ function sopac_user_chkout_table(&$account, &$locum, $max_disp = NULL) {
     $checkouts = $locum->get_patron_checkouts($cardnum, $locum_pass);
 
     if (!count($checkouts)) { return t('No items checked out.'); }
+    $sopac_prefix = variable_get('sopac_url_prefix', 'cat/seek');
     $header = array('',t('Title'),t('Due Date'));
     foreach ($checkouts as $co) {
       if ($renew_status[$co['inum']]['error']) {
@@ -183,10 +184,11 @@ function sopac_user_chkout_table(&$account, &$locum, $max_disp = NULL) {
           $duedate = date('m-d-Y', $co['duedate']);
         }
       }
-      
+
+      $url = url($sopac_prefix . '/record/' . $co['bnum']);
       $rows[] = array(
         '<input type="checkbox" name="inum[' . $co['inum'] . ']" value="' . $co['varname'] . '">',
-        '<a href="/catalog/record/' . $co['bnum'] . '">' . $co['title'] . '</a>',
+        '<a href="' . $url . '">' . $co['title'] . '</a>',
         $duedate,
       );
     }
@@ -256,6 +258,7 @@ function sopac_user_holds_table(&$account, &$locum) {
     }
     
     $rows = array();
+    $sopac_prefix = variable_get('sopac_url_prefix', 'cat/seek');
     foreach ($holds as $hold) {
       $hold_pickup_loc = $hold['pickuploc']['options'][$hold['pickuploc']['selected']];
 
@@ -266,9 +269,10 @@ function sopac_user_holds_table(&$account, &$locum) {
         $freezer = '&nbsp;';
       }
       
+      $url = url($sopac_prefix . '/record/' . $hold['bnum']);
       $row = array(
         '<input type="checkbox" name="cancel[' . $hold['bnum'] . ']" value="1">',
-        '<a href="/catalog/record/' . $hold['bnum'] . '">' . $hold['title'] . '</a>',
+        '<a href="' . $url . '">' . $hold['title'] . '</a>',
         $hold['status'],
         $hold_pickup_loc,
       );
@@ -346,8 +350,9 @@ function sopac_checkout_history_page() {
       $header = array('Title', 'Author', 'Checked Out', 'Details');
       $rows = array();
       foreach ($checkouts as $item) {
+        $url = url($sopac_prefix . '/record/' . $item['bnum']);
         $rows[] = array(
-          '<a href="/catalog/record/' . $item['bnum'] . '">' . $item['title'] . '</a>',
+          '<a href="' . $url . '">' . $item['title'] . '</a>',
           $item['author'],
           $item['date'],
           $item['details'],
