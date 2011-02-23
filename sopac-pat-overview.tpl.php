@@ -8,6 +8,7 @@
  * @version 2.1
  * @author John Blyberg
  */
+global $user;
 ?>
 
 <table width="100%">
@@ -49,7 +50,7 @@
     }
     ?>
     </table>
-    <div class="overview-more-info">[ <a href="/user/library/ratings"><?php print t('See All Your Ratings'); ?></a> ]</div>
+    <div class="overview-more-info">[<?php print l(t('See All Your Ratings'), "user/{$user->uid}/library/ratings"); ?>]</div>
   </td>
   </tr>
   <tr>
@@ -57,14 +58,14 @@
     <div class="overview-title"><?php print t('Top Tags'); ?></div>
     <?php print '<div class="overview-tag-cloud">' . $tag_cloud . '</div>'; ?>
     <br />
-    <div class="overview-more-info">[ <a href="/user/library/tags"><?php print t('See All Your Tags'); ?></a> ]</div>
+    <div class="overview-more-info">[<?php print l(t('See All Your Tags'), "user/{$user->uid}/library/tags"); ?>]</div>
   </td>
   </tr>
   <tr>
   <td colspan="2">
     <div class="overview-title"><?php print t('Recent Reviews'); ?></div>
     <?php print $review_display; ?>
-    <div class="overview-more-info">[ <a href="/user/library/reviews"><?php print t('See All Your Reviews'); ?></a> ]</div>
+    <div class="overview-more-info">[<?php print l(t('See All Your Reviews'), "user/{$user->uid}/library/reviews"); ?>]</div>
   </td>
   </tr>
 </table>

@@ -339,23 +339,28 @@ function sopac_menu() {
     }
   }
 
-  $items['user/library'] = array(
+  $items['user/%user/library'] = array(
     'title' => 'My Library',
     'page callback' => 'sopac_personal_overview_page',
     'access arguments' => array('access user pages'),
     'file' => 'sopac_social.php',
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_LOCAL_TASK,
   );
 
-  $items['user/library/tags'] = array(
+  $items['user/%user/library/my'] = array(
+    'title' => 'My Library',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+
+  $items['user/%user/library/tags'] = array(
     'title' => 'My Tags',
     'page callback' => 'sopac_tags_page_cloud',
     'access arguments' => array('access user pages'),
     'file' => 'sopac_social.php',
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_LOCAL_TASK,
   );
   
-  $items['user/library/tags/cloud'] = array(
+  $items['user/%user/library/tags/cloud'] = array(
     'title' => 'Tag Cloud',
     'access arguments' => array('access user pages'),
     'weight' => -10,
@@ -363,7 +368,7 @@ function sopac_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   
-  $items['user/library/tags/list'] = array(
+  $items['user/%user/library/tags/list'] = array(
     'title' => 'Tag List',
     'page callback' => 'sopac_tags_page_list',
     'access arguments' => array('access user pages'),
@@ -397,29 +402,29 @@ function sopac_menu() {
     'type' => MENU_CALLBACK,
   );
   
-  $items['user/library/ratings'] = array(
+  $items['user/%user/library/ratings'] = array(
     'title' => 'My Ratings',
     'page callback' => 'sopac_ratings_page',
     'access arguments' => array('access user pages'),
     'file' => 'sopac_social.php',
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_LOCAL_TASK,
   );
   
-  $items['user/library/reviews'] = array(
+  $items['user/%user/library/reviews'] = array(
     'title' => 'My Reviews',
     'page callback' => 'sopac_review_page',
     'access arguments' => array('access user pages'),
     'page arguments' => array('personal'),
     'file' => 'sopac_social.php',
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_LOCAL_TASK,
   );
   
-  $items['user/library/searches'] = array(
+  $items['user/%user/library/searches'] = array(
     'title' => 'My Searches',
     'page callback' => 'sopac_saved_searches_page',
     'access arguments' => array('access user pages'),
     'file' => 'sopac_user.php',
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_LOCAL_TASK,
   );
   
   $items['review/delete'] = array(
