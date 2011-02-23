@@ -293,7 +293,7 @@ function sopac_user_tag_hitlist() {
   $offset = ($page_limit * $page);
   $no_circ = $locum->csv_parser($locum_cfg['location_limits']['no_request']);
   $actions = sopac_parse_uri();
-  $tag = $actions[2];
+  $tag = $actions[1];
 
   $result_body = '<div class="overview-title">'.t('Items tagged with "') . $tag . '"</div><br />';
   $bnum_arr = $insurge->get_tagged_items($user->uid, $tag, $page_limit, $offset);
