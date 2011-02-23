@@ -102,7 +102,7 @@ function sopac_user_info_table(&$account, &$locum) {
         $rows[] = array(array('data' => t('Items Checked Out'), 'class' => 'attr_name'), $userinfo['checkouts']);
       }
       if (variable_get('sopac_fines_display', 1) && variable_get('sopac_fines_enable', 1)) {
-        $amount_link = '<a href="/user/fines">$' . number_format($userinfo['balance'], 2, '.', '') . '</a>';
+        $amount_link = l('$' . number_format($userinfo['balance'], 2, '.', ''), 'user/'. $account->uid . '/fines', array('attributes' => array('title' => t('Pay fines'))));
         $rows[] = array(array('data' => t('Fine Balance'), 'class' => 'attr_name'), $amount_link);
       }
       if (variable_get('sopac_cardexp_enable', 1)) {
@@ -463,7 +463,8 @@ function sopac_fines_page() {
       if (variable_get('sopac_payments_enable', 1)) {
         $rows[] = array( 'data' => array(array('data' => $submit_button, 'colspan' => 3)), 'class' => 'profile_button' );
       }
-      $fine_table = '<form method="post" action="/user/fines/pay">' . theme('table', $header, $rows, array('id' => 'patroninfo', 'cellspacing' => '0')) . $hidden_vars . '</form>';
+      $payment_url = url('user/' . $user->uid . '/fines/pay');
+      $fine_table = '<form method="post" action="' . $payment_url . '">' . theme('table', $header, $rows, array('id' => 'patroninfo', 'cellspacing' => '0')) . $hidden_vars . '</form>';
       $notice = t('Your current fine balance is $') . number_format($fine_total, 2) . '.';
     }
   } else {
@@ -560,7 +561,7 @@ function sopac_fine_payment_form() {
   $fine_total = $args[2];
   $hidden_vars_arr = $args[3];
 
-  $form['#redirect'] = 'user/fines';
+  $form['#redirect'] = 'user/' . $user->uid . '/fines';
   $form['sopac_payment_billing_info'] = array(
     '#type' => 'fieldset',
     '#title' => t('Billing Information'),
