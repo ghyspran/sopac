@@ -48,7 +48,7 @@ function sopac_catalog_search() {
     $valid_search = TRUE;
     
     // Save the search URL in a cookie
-    $_SESSION['search_url'] = $_SERVER['REQUEST_URI'];
+    $_SESSION['search_url'] = ltrim($_SERVER['REQUEST_URI'], '/');
     
     if ($getvars['perpage']) {
       $limit = $getvars['perpage'];
