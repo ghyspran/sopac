@@ -329,15 +329,15 @@ function sopac_put_request_link($bnum) {
 }
 
 /**
- * Returns the search URL, only if the user is coming directly from the search page.
+ * Returns the last search URL.
  *
  * @return string|bool Search URL or FALSE
  */
-function sopac_prev_search_url($override = FALSE) {
-  if (!$_SESSION['search_url']) { return FALSE; }
-  $referer = substr($_SERVER['HTTP_REFERER'], 7 + strlen($_SERVER['HTTP_HOST']));
-  $search = $_SESSION['search_url'];
-  if ((($search == $referer) || $override) && $_SESSION['search_url']) { return $search; } else { return FALSE; }
+function sopac_prev_search_url() {
+  if (!empty($_SESSION['search_url'])) {
+    return $_SESSION['search_url'];
+  }
+  return FALSE;
 }
 
 /**

@@ -54,8 +54,8 @@ if (count($item_status['items'])) {
   }
 }
 
-if (sopac_prev_search_url(TRUE)) {
-  print '<p><a href="' . sopac_prev_search_url() . '">&#171; Return to your search</a></p>';
+if (sopac_prev_search_url()) {
+  print '<p>' . l(t('&#171; Return to your search'), sopac_prev_search_url(), array('html' => TRUE)) . '</p>';
 }
 
 ?>
