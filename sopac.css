@@ -617,7 +617,6 @@ input.tagsubmit {
 /* Reviews */
 
 .review-page {
-  width: 50%; /* Remove once table colspan is set to 1 */
   margin-top: 20px;
 }
 
