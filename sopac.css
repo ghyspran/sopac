@@ -213,8 +213,11 @@ ul.item-format-icon { list-style: none; display: inline; }
 }
 
 .item-request {
+  display: block;
+  float: left;
   clear: left;
   margin: 10px 0 0 0;
+  color: #EE2E25;
 }
 
 .item-request p a {
@@ -614,6 +617,7 @@ input.tagsubmit {
 /* Reviews */
 
 .review-page {
+  width: 50%; /* Remove once table colspan is set to 1 */
   margin-top: 20px;
 }
 
