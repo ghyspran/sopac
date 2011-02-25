@@ -140,7 +140,6 @@
 
 .item-left .item-cover {
   margin-top: 0px;
-  margin-top: -60px;
 }
 
 .item-right {
@@ -193,7 +192,6 @@
 .item-format {
   position: relative;
   z-index: 1000;
-  top: 250px;
   left: 6px;
   background: transparent;
   overflow: hidden;
@@ -210,7 +208,9 @@ ul.item-format-icon { list-style: none; display: inline; }
   background: #FFF;
 }
 
-.item-format-icon li.format-text { width:100px; padding: 12px 0; }
+.item-format-icon li.format-text { 
+  padding: 12px 0; 
+}
 
 .item-request {
   clear: left;
