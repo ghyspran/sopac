@@ -195,6 +195,7 @@
   left: 6px;
   background: transparent;
   overflow: hidden;
+  float: right;
 }
 
 ul.item-format-icon { list-style: none; display: inline; }
