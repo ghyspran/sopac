@@ -598,7 +598,7 @@ input.tagsubmit {
 }
 
 .tag-cloud {
-  text-align: center;
+  text-align: left;
 }
 
 .tag-personal-list-head {
@@ -711,7 +711,7 @@ input.tagsubmit {
 }
 
 .overview-more-info {
-  float: right;
+  float: left;
   margin-bottom: 5px;
   margin-top: 7px;
 }
