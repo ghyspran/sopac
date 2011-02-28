@@ -215,7 +215,6 @@ ul.item-format-icon { list-style: none; display: inline; }
 
 .item-request {
   display: block;
-  float: left;
   clear: left;
   margin: 10px 0 0 0;
   color: #EE2E25;
