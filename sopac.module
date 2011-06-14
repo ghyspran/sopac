@@ -42,7 +42,7 @@ function sopac_init() {
   if ($insurge_path[0] != '/') { $insurge_path = '/' . $insurge_path; }
   if (substr($insurge_path, -1) != '/') { $insurge_path .= '/'; }
   if (@file_exists($insurge_path . 'insurge-client.php')) {
-    @require_once($insurge_path . 'insurge-client.php');
+    require_once($insurge_path . 'insurge-client.php');
   }
   
   // Set up some user-specific values

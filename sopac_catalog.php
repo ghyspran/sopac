@@ -101,6 +101,7 @@ function sopac_catalog_search() {
   $search_form = sopac_search_form($search_form_cfg);
 
   // If we get results back, we begin creating the hitlist
+  $result_body = '';
   if ($num_results > 0) {
     // We need to determine how many result pages there are.
     $pager_total[0] = ceil($num_results / $limit);
@@ -151,9 +152,6 @@ function sopac_catalog_search() {
   } else if ($valid_search) {
     $result_body .= theme('sopac_results_nohits', $locum_results_all, $locum->locum_config);
   }
-
-  // Pull it all together into the search page template
-  $result_page = $search_form . theme($output_template, $result_info, $hitlist_pager, $result_body, $locum_results_all, $locum->locum_config);
 
   // Check to see if we're doing RSS
   if ($getvars['output'] == 'rss') {
