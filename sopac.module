@@ -243,6 +243,7 @@ function sopac_menu() {
     'page callback' => 'theme_sopac_search_handler',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
+  );
 
   $items['admin/settings/sopac/moderate'] = array(
     'title' => 'Moderate SOPAC Reviews',
@@ -729,6 +730,7 @@ function sopac_bcode_isverified(&$user_obj) {
   else {
     return FALSE;
   }
+}
 
 /**
  * Creates an external function to formulate a search form by doing the neccesary includes.
