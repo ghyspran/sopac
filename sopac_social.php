@@ -307,7 +307,6 @@ function sopac_user_tag_hitlist($tag) {
   $page = isset($_GET['page']) ? $_GET['page'] : 0;
   $offset = ($page_limit * $page);
   $no_circ = $locum->csv_parser($locum_cfg['location_limits']['no_request']);
-<<<<<<< HEAD
   $actions = sopac_parse_uri();
   $tag = $actions[1];
 
