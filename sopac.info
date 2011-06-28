@@ -1,4 +1,4 @@
-; $Id: sopac.info,v 1.3 2010/03/08 21:18:22 jblyberg Exp $
+; $Id$
 name = SOPAC
 description = The Social OPAC™ for Drupal.
 package = SOPAC
@@ -6,10 +6,4 @@ version = 6.x-2.1-rc1
 core = 6.x
 
 dependencies[] = profile
-
-; Information added by drupal.org packaging script on 2010-03-08
-version = "6.x-2.1-rc2"
-core = "6.x"
-project = "sopac"
-datestamp = "1268085619"
-
+dependencies[] = form_theme_bridge

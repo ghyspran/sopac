@@ -3,8 +3,7 @@
  * Search tracker Block template
  *
  */
-$uri_arr = explode('?', $_SERVER['REQUEST_URI']);
-$uri = $uri_arr[0];
+$uri = $_GET['q'];
 $getvars = sopac_parse_get_vars();
 $sortopts = array(
   '' => t('Relevance'),
@@ -51,7 +50,7 @@ if ($getvars['limit_avail'] && ($locum_config['branches'][$getvars['limit_avail'
 
 <br />
 By Format:
-<div class="search-block-attr"><?php 
+<div class="search-block-attr"><?php
   $search_format_flipped = is_array($getvars['search_format']) ? array_flip($getvars['search_format']) : array();
   if (count($search['format'])) {
     foreach ($search['format'] as $search_format) {
@@ -64,7 +63,8 @@ By Format:
       $search_format_arr[trim($search_format)] = $locum_config['formats'][trim($search_format)] . ' [<a href="' . $rem_link . '">x</a>]';
     }
     print implode('<br />', $search_format_arr);
-  } else {
+  }
+  else {
     print 'Everything';
   }
 ?></div>

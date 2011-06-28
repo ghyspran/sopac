@@ -18,8 +18,8 @@ if (!$cover_img_url) {
 
     <entry>
       <title><?php print $locum_result['title'];?></title>
-      <id>http://<?php print $_SERVER['SERVER_NAME'] . '/'. $url_prefix . '/record/' . $locum_result['bnum'] ?></id>
-      <link rel="alternate" href="http://<?php print $_SERVER['SERVER_NAME'] . '/'. $url_prefix . '/record/' . $locum_result['bnum'] ?>"/>
+      <id><?php print url($url_prefix . '/record/' . $locum_result['bnum'], array('absolute' => TRUE)); ?></id>
+      <link rel="alternate" href="<?php print url($url_prefix . '/record/' . $locum_result['bnum'], array('absolute' => TRUE)); ?>"/>
       <updated><?php print date('Y-m-d'); ?>T00:00:00-05:00</updated>
       <published><?php print $locum_result['bib_created']; ?>T00:00:00-05:00</published>
       <author>
