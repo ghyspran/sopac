@@ -208,7 +208,7 @@ if (is_array($getvars['facet_decade']) && count($getvars['facet_decade'])) {
 <br />
 <div style="float: right;">» <a href="/research_help">Need help?</a></div>
 <?php if ($user->uid) {
-  print '<div style="float: right;">» <a href="' . sopac_savesearch_url() . '">Save this search</a></div>';
+  print '<div style="float: right;">» ' . sopac_savesearch_link() . '&nbsp;</div>';
 }
 ?>
 <br />
