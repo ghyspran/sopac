@@ -304,7 +304,7 @@ function sopac_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['user/checkouts'] = array(
+  $items['user/%user/checkouts'] = array(
     'title' => 'My Checkouts',
     'page callback' => 'sopac_checkouts_page',
     'access arguments' => array('access user pages'),
@@ -313,14 +313,14 @@ function sopac_menu() {
   );
 
   if (variable_get('sopac_checkout_history_enable', 0)) {
-    $items['user/checkouts/history'] = array(
+    $items['user/%user/checkouts/history'] = array(
       'title' => 'My Checkout History',
       'page callback' => 'sopac_checkout_history_page',
       'access arguments' => array('access user pages'),
       'file' => 'sopac_user.php',
       'type' => MENU_NORMAL_ITEM,
     );
-    $items['user/checkouts/history/opt/%'] = array(
+    $items['user/%user/checkouts/history/opt/%'] = array(
       'title' => 'Change Checkout History Status',
       'page callback' => 'sopac_checkout_history_toggle',
       'page arguments' => array(4),
@@ -329,8 +329,8 @@ function sopac_menu() {
       'type' => MENU_CALLBACK,
     );
   }
-  $items['user/holds'] = array(
-    'title' => 'My Holds',
+  $items['user/%user/requests'] = array(
+    'title' => 'My Requests',
     'page callback' => 'sopac_holds_page',
     'access arguments' => array('access user pages'),
     'file' => 'sopac_user.php',
@@ -338,7 +338,7 @@ function sopac_menu() {
   );
 
   if (variable_get('sopac_fines_enable', 1)) {
-      $items['user/fines'] = array(
+      $items['user/%user/fines'] = array(
       'title' => 'My Fines',
       'page callback' => 'sopac_fines_page',
       'access arguments' => array('access user pages'),
@@ -346,7 +346,7 @@ function sopac_menu() {
       'type' => MENU_NORMAL_ITEM,
     );
 
-    $items['user/fines/list'] = array(
+    $items['user/%user/fines/list'] = array(
       'title' => 'List Fines',
       'access arguments' => array('access user pages'),
       'weight' => -10,
@@ -355,7 +355,7 @@ function sopac_menu() {
     );
 
     if (variable_get('sopac_payments_enable', 1)) {
-      $items['user/fines/payments'] = array(
+      $items['user/%user/fines/payments'] = array(
       'title' => 'List Payments',
       'page callback' => 'sopac_finespaid_page',
       'access arguments' => array('access user pages'),
@@ -363,7 +363,7 @@ function sopac_menu() {
       'type' => MENU_LOCAL_TASK,
     );
 
-    $items['user/fines/pay'] = array(
+    $items['user/%user/fines/pay'] = array(
       'title' => 'Fines Payment',
       'page callback' => 'sopac_makepayment_page',
       'access arguments' => array('access user pages'),
@@ -373,7 +373,7 @@ function sopac_menu() {
     }
   }
 
-  $items['user/library'] = array(
+  $items['user/%user/library'] = array(
     'title' => 'My Library',
     'page callback' => 'sopac_personal_overview_page',
     'access arguments' => array('access user pages'),
@@ -381,7 +381,7 @@ function sopac_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
 
-  $items['user/library/tags'] = array(
+  $items['user/%user/library/tags'] = array(
     'title' => 'My Tags',
     'page callback' => 'sopac_tags_page_cloud',
     'access arguments' => array('access user pages'),
@@ -389,7 +389,7 @@ function sopac_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
 
-  $items['user/library/tags/cloud'] = array(
+  $items['user/%user/library/tags/cloud'] = array(
     'title' => 'Tag Cloud',
     'access arguments' => array('access user pages'),
     'weight' => -10,
@@ -397,7 +397,7 @@ function sopac_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
 
-  $items['user/library/tags/list'] = array(
+  $items['user/%user/library/tags/list'] = array(
     'title' => 'Tag List',
     'page callback' => 'sopac_tags_page_list',
     'access arguments' => array('access user pages'),
@@ -405,7 +405,7 @@ function sopac_menu() {
     'type' => MENU_LOCAL_TASK,
   );
 
-  $items['user/tag/edit'] = array(
+  $items['user/%user/tag/edit'] = array(
     'title' => 'Edit Tag',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('sopac_user_tag_edit'),
@@ -414,7 +414,7 @@ function sopac_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['user/tag/delete'] = array(
+  $items['user/%user/tag/delete'] = array(
     'title' => 'Delete Tag',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('sopac_user_tag_delete'),
@@ -423,7 +423,7 @@ function sopac_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['user/tag/show'] = array(
+  $items['user/%user/tag/show'] = array(
     'title' => 'Tagged Items',
     'page callback' => 'sopac_user_tag_hitlist',
     'page arguments' => array(3),
@@ -432,7 +432,7 @@ function sopac_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['user/library/ratings'] = array(
+  $items['user/%user/library/ratings'] = array(
     'title' => 'My Ratings',
     'page callback' => 'sopac_ratings_page',
     'access arguments' => array('access user pages'),
@@ -440,7 +440,7 @@ function sopac_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
 
-  $items['user/library/reviews'] = array(
+  $items['user/%user/library/reviews'] = array(
     'title' => 'My Reviews',
     'page callback' => 'sopac_review_page',
     'access arguments' => array('access user pages'),
@@ -449,7 +449,7 @@ function sopac_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
 
-  $items['user/library/searches'] = array(
+  $items['user/%user/library/searches'] = array(
     'title' => 'My Searches',
     'page callback' => 'sopac_saved_searches_page',
     'access arguments' => array('access user pages'),
@@ -457,7 +457,7 @@ function sopac_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
 
-  $items['user/lists'] = array(
+  $items['user/%user/lists'] = array(
     'title' => 'My Lists',
     'page callback' => 'sopac_lists_page',
     'access arguments' => array('access content'),
@@ -465,7 +465,7 @@ function sopac_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['user/lists/edit'] = array(
+  $items['user/%user/lists/edit'] = array(
     'title' => 'Modify List',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('sopac_list_edit_form', 3),
@@ -475,7 +475,7 @@ function sopac_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['user/lists/delete/%'] = array(
+  $items['user/%user/lists/delete/%'] = array(
     'title' => 'Delete List',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('sopac_list_confirm_delete', 3),
@@ -485,7 +485,7 @@ function sopac_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['user/listadd/%/%'] = array(
+  $items['user/%user/listadd/%/%'] = array(
     'title' => 'Add To List',
     'page callback' => 'sopac_list_add',
     'page arguments' => array(2, 3),
@@ -495,7 +495,7 @@ function sopac_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['user/listmovetop/%/%'] = array(
+  $items['user/%user/listmovetop/%/%'] = array(
     'title' => 'Add To List',
     'page callback' => 'sopac_list_move_top',
     'page arguments' => array(2, 3),
@@ -505,7 +505,7 @@ function sopac_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['user/listdelete/%/%'] = array(
+  $items['user/%user/listdelete/%/%'] = array(
     'title' => 'Add To List',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('sopac_list_confirm_item_delete', 2, 3),
