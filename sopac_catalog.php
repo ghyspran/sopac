@@ -975,23 +975,15 @@ function sopac_staff_request_form(&$form_state, $patron_barcode = NULL) {
  */
 function sopac_search_form_basic() {
 
-  $locum = sopac_get_locum('locum');
+  $locum = new locum();
   $locum_cfg = $locum->locum_config;
   $getvars = sopac_parse_get_vars();
 
   $actions = sopac_parse_uri();
-  if ($actions[0] == "search") {
-    if ($actions[3]) {
-      $actions[2] = $actions[2] . "/" . $actions[3];
-      urlencode($actions[2]);
-    }
-    $search_query = $actions[2];
-    $stype_selected = $actions[1] ? 'cat_' . $actions[1] : 'cat_keyword';
-  }
-  $sformats = array('' => 'Everything');
-  foreach ($locum_cfg[format_groups] as $sfmt => $sfmt_codes) {
-    $sformats[preg_replace('/,[ ]*/', '|', trim($sfmt_codes))] = ucfirst($sfmt);
-  }
+  $search_args_raw = explode('?', $actions[2]);
+  $search_args = trim($search_args_raw[0]);
+  $stype_selected = $actions[1] ? 'cat_' . $actions[1] : 'cat_keyword';
+  $sformat_selected = $_GET['search_format'] ? $_GET['search_format'] : 'all';
 
   $stypes = array(
     'cat_keyword' => t('Keyword'),
@@ -1010,7 +1002,6 @@ function sopac_search_form_basic() {
     'oldest' => t('Oldest First'),
   );
 
-  $sformats = array('' => 'Everything');
   foreach ($locum_cfg['format_groups'] as $sfmt => $sfmt_codes) {
     $sformats[preg_replace('/,[ ]*/', '|', trim($sfmt_codes))] = ucfirst($sfmt);
   }
@@ -1020,61 +1011,62 @@ function sopac_search_form_basic() {
 
   // Initialize the form
   $form = array(
+    '#action' => '/search_handler',
     '#attributes' => array('class' => 'search-form'),
-    '#validate' => array('sopac_search_catalog_validate'),
-    '#submit' => array('sopac_search_catalog_submit'),
   );
+
   // Start creating the basic search form
-  $form['inline'] = array(
-    '#prefix' => '<div class="container-inline">',
-    '#suffix' => '</div>'
-  );
-  $form['inline']['search_query'] = array(
+  $form['basic'] = array('#type' => 'item');
+  $form['basic']['inline'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
+  $form['basic']['inline']['search_query'] = array(
     '#type' => 'textfield',
-    '#default_value' => $search_query,
+    '#title' => t('Search '),
+    '#default_value' => $search_args,
     '#size' => 25,
     '#maxlength' => 255,
-    '#attributes' => array('x-webkit-speech' => 'true'),
+    '#value' => $actions[0] == 'search' ? $search_args : '',
   );
-  $form['inline']['search_type'] = array(
+  $form['basic']['inline']['search_type'] = array(
     '#type' => 'select',
     '#title' => t(' by '),
     '#default_value' => $stype_selected,
+    '#value' => $stype_selected,
     '#options' => $stypes,
   );
-  $form['inline']['search_format'] = array(
+  $form['basic']['inline']['search_format'] = array(
     '#type' => 'select',
     '#title' => t(' in '),
-    '#default_value' => $_GET['search_format'],
-    '#selected' => $_GET['search_format'],
+    '#default_value' => $sformat_selected,
+    '#selected' => $sformat_selected,
     '#options' => $sformats,
   );
-  $form['inline']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Search'),
-  );
-  $form['inline']['advanced_link'] = array(
-    '#prefix' => '<div class="searchtips">',
-    '#value' => l(" Advanced Search", variable_get('sopac_url_prefix', 'cat/seek') . '/advanced'),
-  );
-  $form['inline']['search_tips'] = array(
-    '#value' => l("Search Tips", variable_get('sopac_url_prefix', 'cat/seek') . '/tips'),
-    '#suffix' => '</div>',
-  );
-  $form['inline2'] = array(
-    '#prefix' => '<div class="container-inline">',
-    '#suffix' => '</div>',
-  );
-  $form['inline2']['limit'] = array(
-    '#type' => 'checkbox',
-    '#default_value' => $getvars['limit'],
-  );
-  $form['inline2']['limit_avail'] = array(
-    '#type' => 'select',
-    '#title' => 'limit to items available at',
-    '#options' => array_merge(array('any' => "Any Location"), $locum_cfg['branches']),
-    '#default_value' => $getvars['limit_avail'],
-  );
+
+  $form['basic']['inline']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
+  
+  if (variable_get('sopac_multi_branch_enable', 0)) {
+    $form['basic']['limit']['limit'] = array(
+  		'#prefix' => '<div class="basic-search-inline"><div class="container-inline">',
+  		'#type' => 'checkbox',
+  		'#default_value' => $getvars['limit_avail'] ? 1 : 0,
+  	);
+	
+  	$form['basic']['limit']['limit_avail'] = array(
+  		'#type' => 'select',
+  		'#title' => t('limit to items available at'),
+  		'#options' => array_merge(array('any' => t('Any Location')), $locum_cfg['branches']),
+  		'#default_value' => $getvars['limit_avail'],
+  		'#suffix' => "</div></div>",
+  	);
+  } else {
+    $form['basic']['limit']['limit'] = array(
+  		'#prefix' => '<div class="basic-search-inline"><div class="container-inline">',
+  		'#type' => 'checkbox',
+  		'#title' => '<strong>' . t('limit to available items') . '</strong>',
+  		'#default_value' => $getvars['limit_avail'] ? 1 : 0,
+  		'#suffix' => "</div></div>",
+  	);
+  }
+
   return $form;
 }
 
@@ -1084,145 +1076,175 @@ function sopac_search_form_basic() {
  * @return array Drupal search form array
  */
 function sopac_search_form_adv() {
-  $locum = sopac_get_locum();
+  $locum = new locum();
   $locum_cfg = $locum->locum_config;
   $getvars = sopac_parse_get_vars();
 
   $actions = sopac_parse_uri();
-  if ($actions[0] == "search") {
-    if($actions[3]) { $actions[2] = $actions[2] . "/" . $actions[3]; urlencode($actions[2]); }
-    $search_query = $actions[2];
-    $stype_selected = $actions[1] ? 'cat_' . $actions[1] : 'cat_keyword';
-  }
-  $sformats = array('' => 'Everything');
-  foreach ($locum_cfg[format_groups] as $sfmt => $sfmt_codes) {
+  $search_args_raw = explode('?', $actions[2]);
+  $search_args = trim($search_args_raw[0]);
+  $stype_selected = $actions[1] ? 'cat_' . $actions[1] : 'cat_keyword';
+  $sformat_selected = $_GET['search_format'] ? $_GET['search_format'] : 'all';
+  foreach ($locum_cfg['format_groups'] as $sfmt => $sfmt_codes) {
     $sformats[preg_replace('/,[ ]*/', '|', trim($sfmt_codes))] = ucfirst($sfmt);
   }
 
   $stypes = array(
-    'cat_keyword' => 'Keyword',
-    'cat_title' => 'Title',
-    'cat_author' => 'Author',
-    'cat_series' => 'Series',
-    'cat_tags' => 'Tags',
-    'cat_reviews' => 'Reviews',
-    'cat_subject' => 'Subject',
-    'cat_callnum' => 'Call Number',
-    'cat_isn' => 'ISBN or ISSN',
+    'cat_keyword' => t('Keyword'),
+    'cat_title' => t('Title'),
+    'cat_author' => t('Author'),
+    'cat_series' => t('Series'),
+    'cat_tags' => t('Tags'),
+    'cat_reviews' => t('Reviews'),
+    'cat_subject' => t('Subject'),
+    'cat_callnum' => t('Call Number'),
   );
 
   $sortopts = array(
-    '' => 'Relevance',
-    'atoz' => 'Alphabetical A to Z',
-    'ztoa' => 'Alphabetical Z to A',
-    'catalog_newest' => 'Just Added',
-    'newest' => 'Pub date: Newest',
-    'oldest' => 'Pub date: Oldest',
-    'author' => 'Alphabetically by Author',
-    'top_rated' => 'Top Rated Items',
-    'popular_week' => 'Most Popular this Week',
-    'popular_month' => 'Most Popular this Month',
-    'popular_year' => 'Most Popular this Year',
-    'popular_total' => 'All Time Most Popular',
+    '' => t('Relevance'),
+    'atoz' => t('Alphabetical A to Z'),
+    'ztoa' => t('Alphabetical Z to A'),
+    'catalog_newest' => t('Just Added'),
+    'newest' => t('Pub date: Newest'),
+    'oldest' => t('Pub date: Oldest'),
+    'author' => t('Alphabetically by Author'),
+    'top_rated' => t('Top Rated Items'),
+    'popular_week' => t('Most Popular this Week'),
+    'popular_month' => t('Most Popular this Month'),
+    'popular_year' => t('Most Popular this Year'),
+    'popular_total' => t('All Time Most Popular'),
   );
 
   // Initialize the form
   $form = array(
+    '#action' => '/search_handler',
     '#attributes' => array('class' => 'search-form'),
-    '#validate' => array('sopac_search_catalog_validate'),
-    '#submit' => array('sopac_search_catalog_submit'),
   );
 
-  $form['search_query'] = array(
+  // Start creating the advanced search form
+  $form['advanced'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Click for advanced search'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#attributes' => array('class' => 'search-advanced'),
+  );   
+  $form['advanced']['keywords'] = array(
+    '#prefix' => '<div class="adv_search_crit">',
+    '#suffix' => '</div>',
+  );   
+  $form['advanced']['keywords']['search_query'] = array(
     '#type' => 'textfield',
     '#title' => t('Search term or phrase'),
-    '#default_value' => $search_query,
-    '#size' => 50,
+    '#default_value' => $search_args,
+    '#size' => 20,
     '#maxlength' => 255,
+    '#value' => $search_args,
   );
-
-  $form['search_type'] = array(
+  $form['advanced']['keywords']['search_type'] = array(
     '#type' => 'select',
     '#title' => t('Search by'),
     '#default_value' => $stype_selected,
+    '#value' => $stype_selected,
     '#options' => $stypes,
   );
-  $form['sort'] = array(
+  $form['advanced']['keywords']['sort'] = array(
     '#type' => 'select',
     '#title' => t('Sorted by'),
     '#default_value' => '',
+    '#value' => $getvars['sort'],
     '#options' => $sortopts,
   );
-  $form['age_group'] = array(
-    '#type' => 'select',
-    '#title' => 'in age group',
-    '#options' => array('' => "Any Age Group", 'adult' => "Adult", 'teen' => "Teen", 'youth' => "Youth"),
+  
+  $age_options = array_merge(array('' => 'Any Age Group'), $locum_cfg['ages']);
+  unset($age_options['all']);
+	$form['advanced']['keywords']['age'] = array(
+		'#type' => 'select',
+		'#title' => 'in age group',
+		'#options' => $age_options,
+	);
+	
+  $form['advanced']['narrow1'] = array(
+    '#prefix' => '<div class="adv_search_crit">',
+    '#suffix' => '</div>',
   );
-  $form['limit'] = array(
-    '#prefix' => '<div class="container-inline">',
-    '#type' => 'checkbox',
-    '#default_value' => $getvars['limit'],
-  );
-  $form['limit_avail'] = array(
-    '#type' => 'select',
-    '#title' => 'limit to items available at',
-    '#options' => array_merge(array('any' => "Any Location"), $locum_cfg['branches']),
-    '#default_value' => $getvars['limit_avail'],
-    '#suffix' => "</div>",
-  );
-  if (count($locum_cfg[collections])) {
-    foreach ($locum_cfg[collections] as $loc_collect_key => $loc_collect_var) {
+
+  /* Have not yet implemented collections, and in a number of ways, multi-branch has replaced it
+  if (count($locum_cfg['collections'])) {
+    
+    foreach ($locum_cfg['collections'] as $loc_collect_key => $loc_collect_var) {
       $loc_collect[$loc_collect_key] = $loc_collect_key;
     }
-
-    $form['collection'] = array(
+    
+    $form['advanced']['narrow1']['collection'] = array(
       '#type' => 'select',
       '#title' => t('In these collections'),
       '#size' => 5,
-      '#default_value' => $getvars[collection],
+      '#value' => $getvars['collection'],
       '#options' => $loc_collect,
       '#multiple' => TRUE,
     );
   }
-
-  asort($locum_cfg[formats]);
-  $form['search_format'] = array(
+  
+  $form['advanced']['narrow1']['location'] = array(
+    '#type' => 'select',
+    '#title' => t('In these locations'),
+    '#size' => 5,
+    '#value' => $getvars['location'],
+    '#options' => $locum_cfg['locations'],
+    '#multiple' => TRUE,
+  );
+  
+  */
+  
+  $form['advanced']['narrow1']['search_format'] = array(
     '#type' => 'select',
     '#title' => t('In these formats'),
     '#size' => 5,
-    '#default_value' => $getvars[search_format],
-    '#options' => $locum_cfg[formats],
+    '#value' => $getvars['search_format'],
+    '#options' => $locum_cfg['formats'],
     '#multiple' => TRUE,
   );
-  $form['publisher'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Publisher'),
-    '#size' => 20,
-    '#maxlength' => 255,
-  );
-  $form['pub_year_start'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Published year between'),
-    '#size' => 20,
-    '#maxlength' => 255,
-  );
-  $form['pub_year_end'] = array(
-    '#type' => 'textfield',
-    '#title' => t('and'),
-    '#size' => 20,
-    '#maxlength' => 255,
-  );
-
-  $form['submit'] = array(
+  
+  if (variable_get('sopac_multi_branch_enable', 0)) {
+    $form['advanced']['limit'] = array(
+  		'#prefix' => '<div class="action"><div class="adv-search-inline"><div class="container-inline">',
+  		'#type' => 'checkbox',
+  		'#default_value' => $getvars['limit_avail'] ? 1 : 0,
+  	);
+  	$form['advanced']['limit_avail'] = array(
+  		'#type' => 'select',
+  		'#title' => 'limit to items available at',
+  		'#options' => array_merge(array('any' => "Any Location"), $locum_cfg['branches']),
+  		'#default_value' => $getvars['limit_avail'],
+  		'#suffix' => "</div></div>",
+  	);
+  } else {
+    $form['advanced']['limit'] = array(
+  		'#prefix' => '<div class="action"><div class="adv-search-inline"><div class="container-inline">',
+  		'#type' => 'checkbox',
+  		'#title' => '<strong>' . t('limit to available items') . '</strong>',
+  		'#default_value' => $getvars['limit_avail'] ? 1 : 0,
+  		'#suffix' => "</div></div>",
+  	);
+  }
+	
+  $form['advanced']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Search'),
+    '#value' => t('Advanced search'),
+//    '#prefix' => '<div class="action">',
+//    '#suffix' => '</div>',
   );
-  $form['clear'] = array(
+  
+  $form['advanced']['clear'] = array(
     '#name' => 'clear',
     '#type' => 'button',
     '#value' => t('Reset'),
     '#attributes' => array('onclick' => 'this.form.reset(); return false;'),
+  //  '#prefix' => '<div class="action">',
+    '#suffix' => '</div>',
   );
+  
   return $form;
 }
 
