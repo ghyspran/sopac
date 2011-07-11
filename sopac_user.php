@@ -127,7 +127,7 @@ function sopac_user_info_table(&$account, &$locum) {
         }
         // Reset cache age
         db_query("UPDATE {sopac_last_hist_check} SET last_hist_check = NOW()");
-        $rows[] = array(array('data' => t('Checkout History'), 'class' => 'attr_name'), l($cohist_enabled, 'user/checkout/history'));
+        $rows[] = array(array('data' => t('Checkout History'), 'class' => 'attr_name'), l($cohist_enabled, 'user/'. $account->uid .'checkout/history'));
       }
       if (variable_get('sopac_numco_enable', 1)) {
         $rows[] = array(array('data' => t('Items Checked Out'), 'class' => 'attr_name'), $userinfo['checkouts']);
@@ -140,7 +140,7 @@ function sopac_user_info_table(&$account, &$locum) {
         }
         $balance = '$' . number_format($userinfo['balance'], 2, '.', '');
         if ($userinfo['balance'] > 0) {
-          $balance = l($balance, 'user/fines');
+          $balance = l($balance, 'user/' . $account->uid . '/fines');
         }
         $rows[] = array(array('data' => t('Fine Balance'), 'class' => 'attr_name'), $balance);
       }
@@ -298,7 +298,7 @@ function sopac_user_chkout_table(&$account, &$locum, $max_disp = NULL) {
     $submit_buttons = '<input type="submit" name="sub_type" value="' . t('Renew Selected') . '"> <input type="submit" name="sub_type" value="' . t('Renew All') . '">';
     if ($max_disp && $total > $max_disp) {
       $current_pref = l("Showing $max_disp of $total Checkouts", 'user/' . $account->uid . '/edit/Preferences', array('attributes' => array('title' => "Change this setting")));
-      $rows[] = array('data' => array(array('data' => $current_pref . " [ " . l("See All Checkouts", 'user/checkouts') . " ]",
+      $rows[] = array('data' => array(array('data' => $current_pref . " [ " . l("See All Checkouts", 'user/' . $account->uid . '/checkouts') . " ]",
                                             'colspan' => 6,
                                             'style' => "text-align: right")));
     }
@@ -429,7 +429,7 @@ function sopac_user_holds_form($form_state, $account = NULL, $max_disp = NULL) {
         if (sopac_lockers_available($hold)) {
           $hold['status'] .= '*';
           $locker_message = "<br />*We're testing out a new service. You can " .
-          l("request a locker for outdoor or after hours pickup of this item", "user/locker") . ".<br />";
+          l("request a locker for outdoor or after hours pickup of this item", "user/' . $account->uid . '/locker") . ".<br />";
         }
     }
     $hold_to_theme = array();
@@ -489,7 +489,7 @@ function sopac_user_holds_form($form_state, $account = NULL, $max_disp = NULL) {
   if ($max_disp && $total > $max_disp) {
     $current_pref = l("Showing $max_disp of $total requests", 'user/' . $account->uid . '/edit/Preferences', array('attributes' => array('title' => "Change this setting")));
     $form['see_all'] = array(
-      '#value' => $current_pref . " [ " . l("See All Requests", 'user/requests') . " ]",
+      '#value' => $current_pref . " [ " . l("See All Requests", 'user/' . $account->uid . '/requests') . " ]",
     );
   }
   if ($locker_message) {
@@ -812,11 +812,11 @@ function sopac_checkout_history_page() {
       if (!is_array($checkouts)) {
         if ($checkouts == 'out') {
           $content = '<div>'. t('This feature is currently turned off.') . '</div>';
-          $toggle = l(t('Opt In'), 'user/checkouts/history/opt/in');
+          $toggle = l(t('Opt In'), 'user/' . $user->uid . '/checkouts/history/opt/in');
         }
         if ($checkouts == 'in') {
           $content = '<div>There are no items in your checkout history.</div>';
-          $toggle = l(t('Opt Out'), 'user/checkouts/history/opt/out');
+          $toggle = l(t('Opt Out'), 'user/' . $user->uid . '/checkouts/history/opt/out');
         }
       }
       else {
@@ -868,7 +868,7 @@ function sopac_checkout_history_page() {
  */
 function sopac_checkout_history_toggle($action) {
   global $user;
-  if ($action != 'in' && $action != 'out') { drupal_goto('user/checkouts/history'); }
+  if ($action != 'in' && $action != 'out') { drupal_goto('user/' . $user->uid . '/checkouts/history'); }
   $adjective = $action == 'in' ? t('on') : t('off');
   //profile_load_profile(&$user);
   if ($user->profile_pref_cardnum) {
@@ -977,7 +977,7 @@ function sopac_fines_page() {
       if (variable_get('sopac_payments_enable', 1)) {
         $rows[] = array( 'data' => array(array('data' => $submit_button, 'colspan' => 3)), 'class' => 'profile_button' );
       }
-      $fine_table = '<form method="post" action="' . url('user/fines/pay') . '">' . theme('table', $header, $rows, array('id' => 'patroninfo', 'cellspacing' => '0')) . $hidden_vars . '</form>';
+      $fine_table = '<form method="post" action="' . url('user/' . $user->uid . '/fines/pay') . '">' . theme('table', $header, $rows, array('id' => 'patroninfo', 'cellspacing' => '0')) . $hidden_vars . '</form>';
       $notice = t('Your current fine balance is $') . number_format($fine_total, 2) . '.';
     }
   }
@@ -1079,7 +1079,7 @@ function sopac_fine_payment_form() {
   $fine_total = $args[2];
   $hidden_vars_arr = $args[3];
 
-  $form['#redirect'] = 'user/fines';
+  $form['#redirect'] = 'user/%user/fines';
   $form['sopac_payment_billing_info'] = array(
     '#type' => 'fieldset',
     '#title' => t('Billing Information'),
@@ -1289,7 +1289,7 @@ function sopac_savesearch_form() {
   $uri_arr = sopac_parse_uri();
 
   $form_desc = 'How would you like to label your ' . $uri_arr[1] . ' search for "' . l($uri_arr[2], $search_path, array('query' => $search_query)) . '" ?';
-  $form['#redirect'] = 'user/library/searches';
+  $form['#redirect'] = 'user/' . $user->uid . '/library/searches';
   $form['sopac_savesearch_form'] = array(
     '#type' => 'fieldset',
     '#title' => t($form_desc),
@@ -1583,7 +1583,7 @@ function sopac_lists_page($list_id = 0, $op = NULL, $term = NULL) {
     $output .= theme('pager', NULL, $count);
     if ($list_count == $public_limit) {
       $output .= '<ul class="list-overview-actions"><li class="button green">' .
-                 l("Next $public_limit Lists" , 'user/lists/public', array('query' => array('offset' => $public_offset + $public_limit))) .
+                 l("Next $public_limit Lists" , 'user/' . $user->uid . '/lists/public', array('query' => array('offset' => $public_offset + $public_limit))) .
                  '</li></ul>';
     }
   }
@@ -1596,7 +1596,7 @@ function sopac_lists_page($list_id = 0, $op = NULL, $term = NULL) {
 
         drupal_set_title($list['title']);
         drupal_set_breadcrumb(array(l('Home', '<front>'),
-                                    l('Lists', 'user/lists'),
+                                    l('Lists', 'user/' . $user->uid . '/lists'),
                                     l($list['title'], $_GET['q'])));
 
         // Update Checkout History?
@@ -1668,18 +1668,18 @@ function sopac_lists_page($list_id = 0, $op = NULL, $term = NULL) {
       else {
         $output .= '<p>You do not have permission to view this list.</p>';
         $output .= '<ul><li class="button green">';
-        $output .= ($user->uid ? l('View your lists', 'user/lists') : l('Log in to create lists', 'user', array('query' => 'destination=user/lists')));
+        $output .= ($user->uid ? l('View your lists', 'user/' . $user->uid . '/lists') : l('Log in to create lists', 'user', array('query' => 'destination=user/' . $user->uid . '/lists')));
         $output .= '</li></ul>';
       }
     }
     else {
       drupal_set_message("No list with list id #$list_id exists");
-      drupal_goto('user/lists');
+      drupal_goto('user/' . $user->uid . '/lists');
     }
   }
   else {
     if ($user->uid) {
-      $output .= "<p style=\"float: right\">" . l('See all Public Lists...', 'user/lists/public') . '</p>';
+      $output .= "<p style=\"float: right\">" . l('See all Public Lists...', 'user/' . $user->uid . '/lists/public') . '</p>';
       $output .= "<h1>My Lists:</h1>";
       // display lists
       $res = db_query("SELECT * FROM {sopac_lists} WHERE uid = %d", $user->uid);
@@ -1687,7 +1687,7 @@ function sopac_lists_page($list_id = 0, $op = NULL, $term = NULL) {
         $list['items'] = $insurge->get_list_items($list['list_id']);
         $output .= theme('sopac_list', $list);
       }
-      $output .= '<ul class="list-overview-actions"><li class="button green">' . l('Create New List', 'user/lists/edit') . '</li></ul>';
+      $output .= '<ul class="list-overview-actions"><li class="button green">' . l('Create New List', 'user/' . $user->uid . '/lists/edit') . '</li></ul>';
     }
     else {
       // Anonymous user
@@ -1726,11 +1726,11 @@ function sopac_list_search_form(&$form_state, $search_query = NULL) {
 }
 
 function sopac_list_search_form_submit($form, &$form_state) {
-  drupal_goto('user/lists/public/search/' . $form_state['values']['search_query']);
+  drupal_goto('user/' . $user->uid . '/lists/public/search/' . $form_state['values']['search_query']);
 }
 
 function sopac_list_search_reset($form, &$form_state) {
-  drupal_goto('user/lists/public');
+  drupal_goto('user/' . $user->uid . '/lists/public');
 }
 
 function sopac_list_item_search_form(&$form_state, $search = NULL) {
@@ -1799,9 +1799,9 @@ function sopac_list_form($form_state, $list, $header) {
       'title' => l($item['title'], variable_get('sopac_url_prefix', 'cat/seek') . '/record/' . $item['bnum']),
       'author' => sopac_author_format($item['author'], $item['addl_author']),
       'date' => $item['tag_date'],
-      'actions' => sbl('Remove Item', 'user/listdelete/' . $list['list_id'] . '/' . $item['bnum'], array('iconafter' => 'cross')) .
+      'actions' => sbl('Remove Item', 'user/' . $user->uid . '/listdelete/' . $list['list_id'] . '/' . $item['bnum'], array('iconafter' => 'cross')) .
                    '<br />' .
-                   sbl('Move to Top', 'user/listmovetop/' . $list['list_id'] . '/' . $item['value'], array('iconafter' => 'arrow_up')) .
+                   sbl('Move to Top', 'user/' . $user->uid . '/listmovetop/' . $list['list_id'] . '/' . $item['value'], array('iconafter' => 'arrow_up')) .
                    '<br />' .
                    sbl('Request Item', variable_get('sopac_url_prefix', 'cat/seek') . '/request/' . $item['bnum'], array('iconafter' => 'book_go')),
     );
@@ -1972,11 +1972,11 @@ function sopac_list_edit_form_submit($form, &$form_state) {
       $insurge = sopac_get_insurge();
       $insurge->add_list_item($user->uid, $list_id, $values['bnum']);
       drupal_set_message("Item added to your list");
-      drupal_goto("user/lists/$list_id");
+      drupal_goto("user/' . $user->uid . '/lists/$list_id");
     }
 
   }
-  drupal_goto('user/lists');
+  drupal_goto('user/' . $user->uid . '/lists');
 }
 
 function sopac_list_add($bnum, $list_id = 0) {
@@ -2036,7 +2036,7 @@ function sopac_list_add($bnum, $list_id = 0) {
   }
 
   $output .= '<ul>';
-  $output .= '<li class="button green"><a href="#" onclick="parent.document.location=(\'' . url('user/lists/' . $list_id) . '\')">Go to List</a></li>';
+  $output .= '<li class="button green"><a href="#" onclick="parent.document.location=(\'' . url('user/' . $user->uid . '/lists/' . $list_id) . '\')">Go to List</a></li>';
   $output .= '<li class="button red"><a href="#" onclick="parent.Lightbox.end(\'forceClose\')">Close this window</a></li>';
   $output .= '</ul>';
 
@@ -2048,15 +2048,16 @@ function sopac_list_move_top($list_id, $cur_pos) {
   $insurge = sopac_get_insurge();
   $insurge->move_list_item($list_id, $cur_pos, 1);
   drupal_set_message("Item moved to top of list");
-  drupal_goto("user/lists/$list_id");
+  drupal_goto("user/' . $user->uid . '/lists/$list_id");
 }
 
 function sopac_list_confirm_delete(&$form_state, $list_id) {
+  global $user;
   $form = array('#list_id' => $list_id);
   return confirm_form(
     $form,
     t('Delete List'),
-    'user/lists',
+    'user/' . $user->uid . '/lists',
     t('Are you sure you want to delete this list? The list and all items on it will be removed permanently. This action cannot be undone.'),
     t('Delete'),
     t('Cancel'),
@@ -2064,6 +2065,7 @@ function sopac_list_confirm_delete(&$form_state, $list_id) {
 }
 
 function sopac_list_confirm_delete_submit($form, &$form_state) {
+  global $user;
   $insurge = sopac_get_insurge();
   if ($items = $insurge->get_list_items($form['#list_id'])) {
     // Delete all tags with the list id from insurge
@@ -2073,10 +2075,11 @@ function sopac_list_confirm_delete_submit($form, &$form_state) {
   }
   db_query("DELETE FROM sopac_lists WHERE list_id = %d", $form['#list_id']);
   drupal_set_message(t('The list has been deleted.'));
-  drupal_goto('user/lists');
+  drupal_goto('user/' . $user->uid . '/lists');
 }
 
 function sopac_list_confirm_item_delete(&$form_state, $list_id, $bnum) {
+  global $user;
   $insurge = sopac_get_insurge();
   $items = $insurge->get_list_items($list_id);
   $item = array();
@@ -2092,7 +2095,7 @@ function sopac_list_confirm_item_delete(&$form_state, $list_id, $bnum) {
     return confirm_form(
       $form,
       t('Delete Item'),
-      "user/lists/$list_id",
+      "user/' . $user->uid . '/lists/$list_id",
       t('Are you sure you want to delete this item from the list? This action cannot be undone.'),
       t('Delete'),
       t('Cancel'),
@@ -2100,27 +2103,28 @@ function sopac_list_confirm_item_delete(&$form_state, $list_id, $bnum) {
   }
   else {
     drupal_set_message('Cannot find the specified item on this list', 'error');
-    drupal_goto("user/lists/$list_id");
+    drupal_goto("user/' . $user->uid . '/lists/$list_id");
   }
 }
 
 function sopac_list_confirm_item_delete_submit($form, &$form_state) {
+  global $user;
   $insurge = sopac_get_insurge();
   $insurge->delete_list_item($form['#list_id'], $form['#item']['value']);
 
   drupal_set_message(t('The item has been removed from the list.'));
-  drupal_goto('user/lists/' . $form['#list_id']);
+  drupal_goto('user/' . $user->uid . '/lists/' . $form['#list_id']);
 }
 
 function theme_sopac_list($list, $expanded = FALSE, $minimal = NULL) {
   global $user;
-  $title = ($expanded ? $list['title'] : l($list['title'], 'user/lists/' . $list['list_id']));
+  $title = ($expanded ? $list['title'] : l($list['title'], 'user/' . $user->uid . '/lists/' . $list['list_id']));
   $list_class = "sopac-list";
 
   if ($user->uid == $list['uid'] || user_access('administer sopac')) {
     $actions .= '<ul class="sopac-list-actions">';
-    $actions .= '<li class="button green">' . l('Edit List Details', 'user/lists/edit/' . $list['list_id']) . '</li>';
-    $actions .= '<li class="button red">' . l('Delete List', 'user/lists/delete/' . $list['list_id']) . '</li>';
+    $actions .= '<li class="button green">' . l('Edit List Details', 'user/' . $user->uid . '/lists/edit/' . $list['list_id']) . '</li>';
+    $actions .= '<li class="button red">' . l('Delete List', 'user/' . $user->uid . '/lists/delete/' . $list['list_id']) . '</li>';
     $actions .= '</ul>';
   }
 
@@ -2214,7 +2218,7 @@ function theme_sopac_list($list, $expanded = FALSE, $minimal = NULL) {
       }
       $top .= '</select>';
       $top .= '</span>';
-      $top .= '<span class="pagination">'. l('List/Print View', 'user/lists/' . $list['list_id'] .'/print') . '</span>';
+      $top .= '<span class="pagination">'. l('List/Print View', 'user/' . $user->uid . '/lists/' . $list['list_id'] .'/print') . '</span>';
       $top .= '</div>';
       if ($expanded) {
         $top .= drupal_get_form('sopac_list_item_search_form', $_GET['search']);
@@ -2223,7 +2227,7 @@ function theme_sopac_list($list, $expanded = FALSE, $minimal = NULL) {
     else {
       $content .= '<p>This list is currently empty</p>';
     }
-    $content .= '<ul><li class="button green">' . l('back to lists overview', 'user/lists') . '</li></ul>';
+    $content .= '<ul><li class="button green">' . l('back to lists overview', 'user/' . $user->uid . '/lists') . '</li></ul>';
   }
   else {
     // overview
@@ -2258,6 +2262,7 @@ function theme_sopac_list($list, $expanded = FALSE, $minimal = NULL) {
 }
 
 function theme_sopac_list_block($block_type = 'public') {
+  global $user;
   $insurge = sopac_get_insurge();
   $limit = 10;
   $sql = "SELECT sopac_lists.list_id AS list_id, " .
@@ -2273,7 +2278,7 @@ function theme_sopac_list_block($block_type = 'public') {
   while ($list = db_fetch_array($res)) {
     $output .= '<div class="sopac-list-block-item">';
     $output .= '<div class="sopac-list-block-title">';
-    $output .= '<strong>' . l($list['title'], 'user/lists/' . $list['list_id']) . '</strong>' ;
+    $output .= '<strong>' . l($list['title'], 'user/' . $user->uid . '/lists/' . $list['list_id']) . '</strong>' ;
     $output .= ' by ' . $list['name'];
     $output .= '</div>';
     if ($list['description']) {
@@ -2282,7 +2287,7 @@ function theme_sopac_list_block($block_type = 'public') {
     $output .= '</div>';
   }
   $output .= '<div class="sopac-list-block-item">';
-  $output .= '<div class="sopac-list-block-title">' . l('» View all public lists...', 'user/lists/public') . '</div>';
+  $output .= '<div class="sopac-list-block-title">' . l('» View all public lists...', 'user/' . $user->uid . '/lists/public') . '</div>';
   $output .= '</div>';
 
   return $output;
@@ -2317,7 +2322,7 @@ function sopac_put_list_links($bnum, $list_display = FALSE) {
       }
       else {
         $wishlist = '<li class="button green">' .
-                    l($action_text . ' Wishlist', 'user/listadd/' . $bnum . '/' . $list['list_id'],
+                    l($action_text . ' Wishlist', 'user/' . $user->uid . '/listadd/' . $bnum . '/' . $list['list_id'],
                       array('query' => array('lightbox' => 1), 'attributes' => array('rel' => 'lightframe'), 'alias' => TRUE)) .
                     '</li>';
       }
@@ -2328,7 +2333,7 @@ function sopac_put_list_links($bnum, $list_display = FALSE) {
         $output .= ' class="disabled">' . $list['title'];
       }
       else {
-        $output .= '>' . l($list['title'], 'user/listadd/' . $bnum . '/' . $list['list_id'],
+        $output .= '>' . l($list['title'], 'user/' . $user->uid . '/listadd/' . $bnum . '/' . $list['list_id'],
                          array('query' => array('lightbox' => 1), 'attributes' => array('rel' => 'lightframe'), 'alias' => TRUE));
       }
       $output .= '</li>';
@@ -2336,12 +2341,12 @@ function sopac_put_list_links($bnum, $list_display = FALSE) {
   }
   if (empty($wishlist)) {
     $wishlist = '<li class="button green">' .
-                l($action_text . ' Wishlist', 'user/listadd/' . $bnum . '/wish',
+                l($action_text . ' Wishlist', 'user/' . $user->uid . '/listadd/' . $bnum . '/wish',
                   array('query' => array('lightbox' => 1), 'attributes' => array('rel' => 'lightframe'), 'alias' => TRUE)) .
                 '</li>';
   }
 
-  $output .= '<li>' . l('» Add to new list...', 'user/lists/edit', array('query' => array('bnum' => $bnum), 'alias' => TRUE)) . '</li>';
+  $output .= '<li>' . l('» Add to new list...', 'user/' . $user->uid . '/lists/edit', array('query' => array('bnum' => $bnum), 'alias' => TRUE)) . '</li>';
   $output .= '</ul>';
   $output .= '</li>';
 
