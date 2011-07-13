@@ -252,8 +252,6 @@ function sopac_bib_record() {
     $result_page = theme('sopac_record_musicdownload', $item, $locum->locum_config, $rev_arr, $rev_form);
   }
   else if ($item['bnum']) {
-    $item['tracks'] = $locum->get_cd_tracks($bnum);
-    $item['trackupc'] = $locum->get_upc($bnum);
     $item_status = $locum->get_item_status($bnum, TRUE);
     // Grab Syndetics reviews, etc..
     $review_links = $locum->get_syndetics($item['stdnum'][0]);
